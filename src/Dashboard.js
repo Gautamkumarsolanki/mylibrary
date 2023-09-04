@@ -47,23 +47,26 @@ export default function Dashboard() {
       dispatch(setIssues(res.data))
     }
   }
-  const returnBook = async (id,idx,data) => {
-    const res = await axios.put(`http://localhost:8000/api/book/return/${id}`,{
+  const returnBook = async (id, idx, data) => {
+    const res = await axios.put(`http://localhost:8000/api/book/return/${id}`, {
     }, {
       'headers': {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`
       }
     })
-    if(res.status===201){
-      dispatch(return_book({data:{...data,returned:true,return_date:res.data.date},idx:idx}))
+    if (res.status === 201) {
+      dispatch(return_book({ data: { ...data, returned: true, return_date: res.data.date }, idx: idx }))
     }
   }
   React.useEffect(() => {
     if (!issued_books) {
       getIssuedBooks()
+      setLoading(false);
     }
   }, [])
-
+  if (loading) {
+    return <Loading />
+  }
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 380 }} aria-label="customized table">
@@ -76,7 +79,7 @@ export default function Dashboard() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {issued_books && issued_books.map((row,idx) => (
+          {issued_books && issued_books.map((row, idx) => (
             <StyledTableRow key={row.id}>
               <StyledTableCell component="th" scope="row">
                 {row.bookname}
@@ -84,7 +87,7 @@ export default function Dashboard() {
               <StyledTableCell align="left">{row.issue_date}</StyledTableCell>
               <StyledTableCell align="center">
                 {row.returned ? row.return_date :
-                  <Button onClick={() => returnBook(row.id,idx,row)}>Return</Button>
+                  <Button onClick={() => returnBook(row.id, idx, row)}>Return</Button>
                 }
               </StyledTableCell>
               <StyledTableCell align="center">{row.returned ? "Returned" : "Not Returned"}</StyledTableCell>
