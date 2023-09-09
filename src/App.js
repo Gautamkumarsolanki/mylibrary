@@ -8,7 +8,6 @@ import Loading from "./Loading";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "./features/user/userSlice";
-import { SatelliteAlt } from "@mui/icons-material";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -39,6 +38,8 @@ function App() {
       setLoading(false);
     }else{
       getData();
+      setLoading(false);
+
     }
     
   }, [user])
